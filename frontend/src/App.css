@@ -91,12 +91,16 @@ button:hover {
   margin-top: 20px;
 }
 
-.search-container {
+.controls-container {
+  display: flex;
+  gap: 10px;
   margin-bottom: 20px;
+  align-items: center;
+  justify-content: center;
 }
 
 .search-input {
-  width: 100%;
+  flex: 1;
   max-width: 400px;
   padding: 12px;
   font-size: 16px;
@@ -108,6 +112,17 @@ button:hover {
   outline: none;
   border-color: #45a049;
   box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+}
+
+.btn-sort {
+  background-color: #FF9800;
+  white-space: nowrap;
+  padding: 12px 20px;
+  font-size: 14px;
+}
+
+.btn-sort:hover {
+  background-color: #F57C00;
 }
 
 table {

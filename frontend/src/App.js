@@ -9,6 +9,7 @@ function App() {
   const [stuClass, setStuClass] = useState("");
   const [editingId, setEditingId] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [sortAsc, setSortAsc] = useState(true);
 
   useEffect(() => {
     fetchStudents();
@@ -75,6 +76,14 @@ function App() {
     s.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const sortedStudents = [...filteredStudents].sort((a, b) => {
+    const nameA = a.name.toLowerCase();
+    const nameB = b.name.toLowerCase();
+    if (nameA < nameB) return sortAsc ? -1 : 1;
+    if (nameA > nameB) return sortAsc ? 1 : -1;
+    return 0;
+  });
+
   return (
     <div className="App">
       <h1>Quản Lý Học Sinh</h1>
@@ -119,7 +128,7 @@ function App() {
       <div className="table-container">
         <h2>Danh Sách Học Sinh</h2>
         
-        <div className="search-container">
+        <div className="controls-container">
           <input 
             type="text"
             placeholder="Tìm kiếm theo tên..."
@@ -127,9 +136,16 @@ function App() {
             onChange={e => setSearchTerm(e.target.value)}
             className="search-input"
           />
+          
+          <button 
+            onClick={() => setSortAsc(prev => !prev)}
+            className="btn-sort"
+          >
+            Sắp xếp: {sortAsc ? 'A → Z' : 'Z → A'}
+          </button>
         </div>
 
-        {filteredStudents.length === 0 ? (
+        {sortedStudents.length === 0 ? (
           <p>{searchTerm ? 'Không tìm thấy học sinh nào' : 'Chưa có học sinh nào'}</p>
         ) : (
           <table>
@@ -142,7 +158,7 @@ function App() {
               </tr>
             </thead>
             <tbody>
-              {filteredStudents.map(student => (
+              {sortedStudents.map(student => (
                 <tr key={student._id}>
                   <td>{student.name}</td>
                   <td>{student.age}</td>

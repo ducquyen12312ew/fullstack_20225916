@@ -7,6 +7,7 @@ function App() {
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const [stuClass, setStuClass] = useState("");
+  const [editingId, setEditingId] = useState(null);
 
   useEffect(() => {
     fetchStudents();
@@ -18,23 +19,44 @@ function App() {
       .catch(error => console.error("Lỗi khi fetch danh sách:", error));
   };
 
-  const handleAddStudent = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     
-    const newStudent = { 
+    const studentData = { 
       name, 
       age: Number(age), 
       class: stuClass 
     };
 
-    axios.post('http://localhost:5000/api/students', newStudent)
-      .then(res => {
-        setStudents(prev => [...prev, res.data]);
-        setName("");
-        setAge("");
-        setStuClass("");
-      })
-      .catch(err => console.error("Lỗi khi thêm:", err));
+    if (editingId) {
+      axios.put(`http://localhost:5000/api/students/${editingId}`, studentData)
+        .then(res => {
+          setStudents(prev => prev.map(s => s._id === editingId ? res.data : s));
+          resetForm();
+        })
+        .catch(err => console.error("Lỗi khi cập nhật:", err));
+    } else {
+      axios.post('http://localhost:5000/api/students', studentData)
+        .then(res => {
+          setStudents(prev => [...prev, res.data]);
+          resetForm();
+        })
+        .catch(err => console.error("Lỗi khi thêm:", err));
+    }
+  };
+
+  const handleEdit = (student) => {
+    setName(student.name);
+    setAge(student.age);
+    setStuClass(student.class);
+    setEditingId(student._id);
+  };
+
+  const resetForm = () => {
+    setName("");
+    setAge("");
+    setStuClass("");
+    setEditingId(null);
   };
 
   return (
@@ -42,8 +64,8 @@ function App() {
       <h1>Quản Lý Học Sinh</h1>
       
       <div className="form-container">
-        <h2>Thêm Học Sinh Mới</h2>
-        <form onSubmit={handleAddStudent}>
+        <h2>{editingId ? 'Chỉnh Sửa Học Sinh' : 'Thêm Học Sinh Mới'}</h2>
+        <form onSubmit={handleSubmit}>
           <input 
             type="text" 
             placeholder="Họ tên" 
@@ -65,7 +87,16 @@ function App() {
             onChange={e => setStuClass(e.target.value)} 
             required 
           />
-          <button type="submit">Thêm Học Sinh</button>
+          <div className="button-group">
+            <button type="submit">
+              {editingId ? 'Cập Nhật' : 'Thêm Học Sinh'}
+            </button>
+            {editingId && (
+              <button type="button" onClick={resetForm} className="btn-cancel">
+                Hủy
+              </button>
+            )}
+          </div>
         </form>
       </div>
 
@@ -80,6 +111,7 @@ function App() {
                 <th>Họ Tên</th>
                 <th>Tuổi</th>
                 <th>Lớp</th>
+                <th>Thao Tác</th>
               </tr>
             </thead>
             <tbody>
@@ -88,6 +120,14 @@ function App() {
                   <td>{student.name}</td>
                   <td>{student.age}</td>
                   <td>{student.class}</td>
+                  <td>
+                    <button 
+                      onClick={() => handleEdit(student)}
+                      className="btn-edit"
+                    >
+                      Sửa
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>

@@ -91,6 +91,25 @@ button:hover {
   margin-top: 20px;
 }
 
+.search-container {
+  margin-bottom: 20px;
+}
+
+.search-input {
+  width: 100%;
+  max-width: 400px;
+  padding: 12px;
+  font-size: 16px;
+  border: 2px solid #4CAF50;
+  border-radius: 4px;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #45a049;
+  box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+}
+
 table {
   width: 100%;
   border-collapse: collapse;

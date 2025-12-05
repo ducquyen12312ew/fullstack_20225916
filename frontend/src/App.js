@@ -8,6 +8,7 @@ function App() {
   const [age, setAge] = useState("");
   const [stuClass, setStuClass] = useState("");
   const [editingId, setEditingId] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     fetchStudents();
@@ -70,6 +71,10 @@ function App() {
     setEditingId(null);
   };
 
+  const filteredStudents = students.filter(s => 
+    s.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="App">
       <h1>Quản Lý Học Sinh</h1>
@@ -113,8 +118,19 @@ function App() {
 
       <div className="table-container">
         <h2>Danh Sách Học Sinh</h2>
-        {students.length === 0 ? (
-          <p>Chưa có học sinh nào</p>
+        
+        <div className="search-container">
+          <input 
+            type="text"
+            placeholder="Tìm kiếm theo tên..."
+            value={searchTerm}
+            onChange={e => setSearchTerm(e.target.value)}
+            className="search-input"
+          />
+        </div>
+
+        {filteredStudents.length === 0 ? (
+          <p>{searchTerm ? 'Không tìm thấy học sinh nào' : 'Chưa có học sinh nào'}</p>
         ) : (
           <table>
             <thead>
@@ -126,7 +142,7 @@ function App() {
               </tr>
             </thead>
             <tbody>
-              {students.map(student => (
+              {filteredStudents.map(student => (
                 <tr key={student._id}>
                   <td>{student.name}</td>
                   <td>{student.age}</td>

@@ -70,10 +70,21 @@ button:hover {
   background-color: #2196F3;
   padding: 5px 15px;
   font-size: 14px;
+  margin-right: 5px;
 }
 
 .btn-edit:hover {
   background-color: #0b7dda;
+}
+
+.btn-delete {
+  background-color: #f44336;
+  padding: 5px 15px;
+  font-size: 14px;
+}
+
+.btn-delete:hover {
+  background-color: #da190b;
 }
 
 .table-container {

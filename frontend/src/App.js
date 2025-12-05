@@ -52,6 +52,17 @@ function App() {
     setEditingId(student._id);
   };
 
+  const handleDelete = (id) => {
+    if (!window.confirm("Bạn có chắc muốn xóa học sinh này?")) return;
+    
+    axios.delete(`http://localhost:5000/api/students/${id}`)
+      .then(res => {
+        console.log(res.data.message);
+        setStudents(prevList => prevList.filter(s => s._id !== id));
+      })
+      .catch(err => console.error("Lỗi khi xóa:", err));
+  };
+
   const resetForm = () => {
     setName("");
     setAge("");
@@ -126,6 +137,12 @@ function App() {
                       className="btn-edit"
                     >
                       Sửa
+                    </button>
+                    <button 
+                      onClick={() => handleDelete(student._id)}
+                      className="btn-delete"
+                    >
+                      Xóa
                     </button>
                   </td>
                 </tr>

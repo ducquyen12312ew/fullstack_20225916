@@ -47,6 +47,19 @@ app.put('/api/students/:id', async (req, res) => {
   }
 });
 
+app.delete('/api/students/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    const deleted = await Student.findByIdAndDelete(id);
+    if (!deleted) {
+      return res.status(404).json({ error: "Student not found" });
+    }
+    res.json({ message: "Đã xóa học sinh", id: deleted._id });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server đang chạy tại http://localhost:${PORT}`);
 });
